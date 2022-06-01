@@ -22,19 +22,13 @@ function rng(length) {
 	return result;
 }
 
-async function genCardId(type) {
-		let finalNumber;
-		if(type === 1){
-		finalNumber = 9
-	} else if(type === 0){
-		finalNumber = 0
-	}
-	return `${rng(4)}-${rng(4)}-${rng(4)}-${rng(3)}${finalNumber}`
+async function genCardId() {
+	return `${rng(4)}-${rng(4)}-${rng(4)}-${rng(4)}`
 }
 
 async function crearCuenta(pin,clientPassword,type) {
 
-	let gCardId = await genCardId(type)
+	let gCardId = await genCardId()
 
 	if(cardId.tiene(gCardId)){
 		gCardId = genCardId()
@@ -73,6 +67,14 @@ async function crearCuenta(pin,clientPassword,type) {
 	await cvv.establecer(gCardId, `${cvvSha256}`);
 
 	console.log(`Pin: ${pin}, CVV: ${gcvv}`)
+
+	return {
+		"pin": pin,
+		"cardId": gCardId,
+		"money": "0",
+		"password": clientPassword,
+		"gcvv": gcvv
+	}
 }
 
-crearCuenta(1234,12345678,1)
+module.exports = { crearCuenta }

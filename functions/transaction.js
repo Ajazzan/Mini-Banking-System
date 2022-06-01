@@ -31,7 +31,7 @@ async function trasaction(sCvv, sCardId, sAmount, sPin, rCardId) {
 	let sCvvSha256 = await sha256(`${sCvv}`);
 	let sPinSha256 = await sha256(`${sPin}`);
 
-	if(!cardId.tiene(sCardId)){
+	if(!cardId.tiene(`${sCardId}`)){
 		return "Wrong Sender Card ID"
 	}
 
@@ -80,6 +80,4 @@ async function trasaction(sCvv, sCardId, sAmount, sPin, rCardId) {
 	}
 }
 
-setInterval(async () => {
-   await trasaction(129, "1945-5838-3382-4109", 1, 1234, "6133-1794-2545-3429")
-}, 1)
+module.exports = { trasaction }
