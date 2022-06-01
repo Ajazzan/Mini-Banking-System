@@ -4,6 +4,7 @@ const morgan = require("morgan");
 
 const crearCuenta = require("./functions/newAccount.js");
 const transaction = require("./functions/transaction.js");
+const mint = require("./functions/mintMoney.js");
 
 app.use(express.json());
 app.use(morgan('dev'));
@@ -54,5 +55,26 @@ app.get("/api/transaction/:sCvv/:sCardId/:sAmount/:sPin/:rCardId", async (req,re
 	let rCardId = req.params.rCardId;
 
 	res.send(await transaction.trasaction(sCvv,sCardID,sAmount,sPin,rCardId))
+})
+
+app.get("/api/mint/:account/:amount/:adminAccount/:adminCvv", async (req,res) => {
+	if(!req.params.account){
+		return res.send("Falta la cuenta que recibira los fondos")
+	}
+
+	if(!req.params.amount){
+		return res.send("Falta el monto a crear.")
+	}
+
+	if(!req.params.adminAccount){
+		return res.send("Falta el administraddor que autorizo la impresion de los fondos.")
+	}
+
+	let account = req.params.account;
+	let amount = req.params.amount;
+	let adminAccount = req.params.adminAccount;
+	let adminCvv = req.params.adminCvv;
+
+	res.send(await mint.mint(account,amount,adminAccount,adminCvv))
 })
 app.listen(3000)
