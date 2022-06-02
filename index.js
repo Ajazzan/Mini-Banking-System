@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const crearCuenta = require("./functions/newAccount.js");
 const transaction = require("./functions/transaction.js");
 const mint = require("./functions/mintMoney.js");
+const getSupply = require("./functions/getSupply.js");
 
 app.use(express.json());
 app.use(morgan('dev'));
@@ -76,5 +77,9 @@ app.get("/api/mint/:account/:amount/:adminAccount/:adminCvv", async (req,res) =>
 	let adminCvv = req.params.adminCvv;
 
 	res.send(await mint.mint(account,amount,adminAccount,adminCvv))
+})
+
+app.get("/api/supply", async (req,res) => {
+	res.send(await getSupply.getSupply())
 })
 app.listen(3000)
