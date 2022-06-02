@@ -65,6 +65,7 @@ async function trasaction(sCvv, sCardId, sAmount, sPin, rCardId) {
 
 	await money.restar(sCardId, sAmount)
 	await money.sumar(rCardId, sAmount)
+	await references.establecer(`${treference}.type`, 'transfer')
 	await references.establecer(`${treference}.sender`, sCardId)
 	await references.establecer(`${treference}.reciver`, rCardId)
 	await references.establecer(`${treference}.amont`, sAmount)

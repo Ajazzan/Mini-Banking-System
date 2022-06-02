@@ -37,10 +37,23 @@ async function mint(account, amount, adminAccount, pAdminCvv) {
 	await csupply.sumar('supply', amount)
 	await money.sumar(account, amount);
 
+	let cSupplyData = await csupply.obtener("supply")
+
+	let refnum = await referencescount.obtener("count")
+	let treference = await refnum + 1;
+	await referencescount.establecer("count", treference)
+
+	await references.establecer(`${treference}.type`, "mint")
+	await references.establecer(`${treference}.reciver`, account)
+	await references.establecer(`${treference}.amount`, amount)
+	await references.establecer(`${treference}.adminAccount`, adminAccount)
+	await references.establecer(`${treference}.reference`, treference)
+
 	return {
 		"minted": amount,
 		"accountForMint": account,
-		"adminAccount": adminAccount 
+		"adminAccount": adminAccount,
+		"circulatinSupply": cSupplyData, 
 	}
 }
 
