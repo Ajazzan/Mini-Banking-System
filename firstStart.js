@@ -65,6 +65,8 @@ async function crearPrimeraCuenta(pin,clientPassword,type) {
 	let passwordSha256 = await sha256(`${clientPassword}`);
 	let cvvSha256 = await sha256(`${gcvv}`);
 
+	await referencescount.establecer("count", "0")
+
 	await code.establecer(gCardId, `${pinSha256}`);
 	await cardId.establecer(gCardId, "true");
 	await money.establecer(gCardId, "0");
