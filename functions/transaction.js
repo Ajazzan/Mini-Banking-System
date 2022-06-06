@@ -57,6 +57,10 @@ async function trasaction(sCvv, sCardId, sAmount, sPin, rCardId) {
 		return 'You dont have the necesary money for this payment.'
 	}
 
+	if(sAmount === 0) {
+		return 'You dont have the necesary money for this payment.'
+	}
+
 	let refnum = await referencescount.obtener("count")
 	let treference = await refnum + 1;
 	await referencescount.establecer("count", treference)

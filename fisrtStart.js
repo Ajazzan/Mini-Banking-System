@@ -1,3 +1,5 @@
+//Primary Modules
+
 const db = require("megadb");
 const sha256 = require("sha256");
 
@@ -8,6 +10,28 @@ let password = new db.crearDB("password");
 let cvv = new db.crearDB("cvv");
 let cardId = new db.crearDB("cardId");
 let code = new db.crearDB("code");
+let csupply = new db.crearDB("csupply");
+
+//Exclusive DB
+
+let references = new db.crearDB("references")
+let referencescount = new db.crearDB("referencescount")
+let admins = new db.crearDB('admins');
+
+//External Functions
+
+const crearCuenta = require("./functions/newAccount.js");
+const transaction = require("./functions/transaction.js");
+const mint = require("./functions/mintMoney.js");
+const burn = require("./functions/burnMoney.js");
+const getSupply = require("./functions/getSupply.js");
+
+//Config
+
+const config = require("./config.json");
+let adminPin = config.pin
+let adminPassword = config.password;
+let gCardId = config.cardId;
 
 //Functions
 
@@ -22,32 +46,7 @@ function rng(length) {
 	return result;
 }
 
-async function genCardId() {
-	return `${rng(4)}-${rng(4)}-${rng(4)}-${rng(4)}`
-}
-
-async function crearCuenta(pin,clientPassword,type) {
-
-	let gCardId = await genCardId()
-
-	if(cardId.tiene(gCardId)){
-		gCardId = genCardId()
-		if(cardId.tiene(gCardId)){
-			gCardId = genCardId()
-			if(cardId.tiene(gCardId)){
-				gCardId = genCardId()
-				if(cardId.tiene(gCardId)){
-					gCardId = genCardId()
-					if(cardId.tiene(gCardId)){
-						gCardId = genCardId()
-						if(cardId.tiene(gCardId)){
-							return "Error, vuelve a intentar"
-						}
-					}
-				}
-			}
-		}
-	}
+async function crearPrimeraCuenta(pin,clientPassword,type) {
 
 	if(!pin) {
 		return 'Especifique el pin.';
@@ -72,15 +71,21 @@ async function crearCuenta(pin,clientPassword,type) {
 	await password.establecer(gCardId, `${passwordSha256}`);
 	await cvv.establecer(gCardId, `${cvvSha256}`);
 
-	console.log(`Pin: ${pin}, CVV: ${gcvv}`)
+    await admins.establecer(gCardId, "true")
 
-	return {
-		"pin": pin,
-		"cardId": gCardId,
+	console.log(` Guarda bien estos datos!, Son irrecuperables: \n
+		"pin": ${pin},
+		"cardId": ${gCardId},
 		"money": "0",
-		"password": clientPassword,
-		"gcvv": gcvv
-	}
+		"password": ${clientPassword},
+		"gcvv": ${gcvv}
+    `)
 }
 
-module.exports = { crearCuenta }
+crearPrimeraCuenta(adminPin,adminPassword,1)
+
+async function setDatabases(){
+    await csupply.establecer("supply", 0)
+}
+
+setDatabases()
