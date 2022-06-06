@@ -1,6 +1,6 @@
 # Mini-Banking-System
 
-# ChnageLog
+# ChangeLog
 
 v1
 
