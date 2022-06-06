@@ -7,6 +7,7 @@ const transaction = require("./functions/transaction.js");
 const mint = require("./functions/mintMoney.js");
 const burn = require("./functions/burnMoney.js");
 const getSupply = require("./functions/getSupply.js");
+const getTransaction = require("./functions/getTransaction.js");
 
 app.use(express.json());
 app.use(morgan('dev'));
@@ -104,5 +105,9 @@ app.get("/api/burn/:account/:amount/:adminAccount/:adminCvv", async (req,res) =>
 
 app.get("/api/supply", async (req,res) => {
 	res.send(await getSupply.getSupply())
+})
+
+app.get("/api/gettransaction/:id", async (req,res) => {
+	res.send(await getTransaction.getTransaction(req.params.id))
 })
 app.listen(3000)
