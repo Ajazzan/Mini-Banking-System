@@ -1,11 +1,12 @@
-# Mini-Banking-System
+## ChangeLog
 
-# ChangeLog
+**v1**
 
-v1
-
-Agregado Funcion Mint, Burn, newAccount, getSupply y Transfer, Funciones basadas en crypto.
-
-Agregado registro de transacciones con numero de referencia secuencial
-
-Agregada funcion de primer inicio para registrar usuario administrador
+ 1. Agregado Funcion Mint, Burn, newAccount, getSupply y Transfer,
+    Funciones basadas en crypto.
+    
+2. Agregado registro de transacciones con numero de referencia
+    secuencial
+    
+3. Agregada funcion de primer inicio para registrar usuario
+    administrador
