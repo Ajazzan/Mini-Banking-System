@@ -8,6 +8,7 @@ let password = new db.crearDB("password");
 let cvv = new db.crearDB("cvv");
 let cardId = new db.crearDB("cardId");
 let code = new db.crearDB("code");
+let feedb = new db.crearDB("fee");
 
 //Exclusive DB
 
@@ -31,6 +32,10 @@ async function trasaction(sCvv, sCardId, sAmount, sPin, rCardId) {
 	let sCvvSha256 = await sha256(`${sCvv}`);
 	let sPinSha256 = await sha256(`${sPin}`);
 
+	let fee = await feedb.obtener("fee")
+
+	let transactionTotal = sAmount + fee;
+
 	if(!cardId.tiene(`${sCardId}`)){
 		return "Wrong Sender Card ID"
 	}
@@ -53,12 +58,12 @@ async function trasaction(sCvv, sCardId, sAmount, sPin, rCardId) {
 
 	let smoney = await money.obtener(sCardId)
 
-	if(sAmount > smoney) {
+	if(transactionTotal > smoney) {
 		return 'You dont have the necesary money for this payment.'
 	}
 
 	if(sAmount === 0) {
-		return 'You dont have the necesary money for this payment.'
+		return '0?'
 	}
 
 	let refnum = await referencescount.obtener("count")
@@ -67,7 +72,7 @@ async function trasaction(sCvv, sCardId, sAmount, sPin, rCardId) {
 
 	console.log(treference)
 
-	await money.restar(sCardId, sAmount)
+	await money.restar(sCardId, transactionTotal)
 	await money.sumar(rCardId, sAmount)
 	await references.establecer(`${treference}.type`, 'transfer')
 	await references.establecer(`${treference}.sender`, sCardId)
@@ -75,13 +80,12 @@ async function trasaction(sCvv, sCardId, sAmount, sPin, rCardId) {
 	await references.establecer(`${treference}.amont`, sAmount)
 	await references.establecer(`${treference}.reference`, treference)
 
-	await money.sumar(sCardId, 10)
-
 	return {
 		"sender": sCardId,
 		"reciver": rCardId,
 		"amount": sAmount,
-		"reference": treference
+		"reference": treference,
+		"fee": fee
 	}
 }
 
