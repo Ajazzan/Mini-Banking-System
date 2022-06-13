@@ -3,7 +3,10 @@
 
 ## ChangeLog
 
+**v1.0.2**
 
+ 1. Agregado Funcion de **Comisiones**
+ 
 **v1.0.1**
 
  1. Agregado Funcion **getTransaction**, para obtener sin ningun permiso requerido toda la informacion de una transaccion
